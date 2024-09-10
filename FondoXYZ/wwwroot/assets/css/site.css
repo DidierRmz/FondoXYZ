@@ -1,0 +1,25 @@
+body {
+    background-color: #f8f9fa;
+}
+
+header {
+    background-color: #dc3545; /* Red color */
+    color: #fff;
+    padding: 2rem 0;
+}
+
+header img {
+    height: 100px;
+}
+
+.card-header {
+    background-color: #007bff; /* Blue color */
+    color: #fff;
+}
+
+footer {
+    background-color: #dc3545; /* Red color */
+    color: #fff;
+    padding: 1rem 0;
+    margin-top: 4rem;
+}
