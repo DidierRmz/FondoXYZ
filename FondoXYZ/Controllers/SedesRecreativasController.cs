@@ -1,32 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using FondoXYZ.Interfaces;
+using FondoXYZ.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace FondoXYZ.Controllers
 {
-    [Route("[controller]")]
-    public class SedesRecreativasController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class SedesController : Controller
     {
-        private readonly ILogger<SedesRecreativasController> _logger;
+        private readonly ISedeRecreativaRepository _sedeRepository;
 
-        public SedesRecreativasController(ILogger<SedesRecreativasController> logger)
+        public SedesController(ISedeRecreativaRepository sedeRepository)
         {
-            _logger = logger;
+            _sedeRepository = sedeRepository;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> GetSedes()
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
+            var sedes = await _sedeRepository.GetAllAsync();
+            return Ok(sedes);
         }
     }
 }

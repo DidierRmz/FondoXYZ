@@ -1,9 +1,6 @@
 using FondoXYZ.Models;
 
-namespace FondoXYZ.Repositories
+namespace FondoXYZ.Interfaces
 {
-    public interface ITarifaRepository : IRepository<Tarifa>
-    {
-
-    }
+    public interface ITarifaRepository : IGenericRepository<Tarifa> { }
 }

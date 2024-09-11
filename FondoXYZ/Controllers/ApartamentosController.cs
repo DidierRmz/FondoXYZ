@@ -1,19 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
 using FondoXYZ.Repositories;
 using FondoXYZ.Models;
+using FondoXYZ.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using FondoXYZ.Data;
 
-public class ApartamentosController : Controller
+namespace FondoXYZ.Controllers
 {
-    private readonly IApartamentoRepository _apartamentoRepository;
-
-    public ApartamentosController(IApartamentoRepository apartamentoRepository)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ApartamentosController : Controller
     {
-        _apartamentoRepository = apartamentoRepository;
-    }
+        private readonly IApartamentoRepository _apartamentoRepository;
 
-    public async Task<IActionResult> Index()
-    {
-        var apartamentos = await _apartamentoRepository.GetAllAsync();
-        return View(apartamentos);
+        public ApartamentosController(IApartamentoRepository apartamentoRepository)
+        {
+            _apartamentoRepository = apartamentoRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var apartamentos = await _apartamentoRepository.GetAllApartamentosAsync();
+            return View(apartamentos);
+        }
     }
 }

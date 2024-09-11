@@ -1,14 +1,13 @@
-using FondoXYZ.Data;
 using FondoXYZ.Models;
+using FondoXYZ.Data;
+using FondoXYZ.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using FondoXYZ.Services;
 
 namespace FondoXYZ.Repositories
 {
-    public class SedeRecreativaRepository : Repository<SedeRecreativa>, ISedeRecreativaRepository
+    public class SedeRecreativaRepository : GenericRepository<SedeRecreativa>, ISedeRecreativaRepository
     {
-        public SedeRecreativaRepository(ApplicationDbContext context) : base(context)
-        {
-        }
-
-        // Métodos específicos para SedeRecreativa, si es necesario
+        public SedeRecreativaRepository(ApplicationDbContext context) : base(context) { }
     }
 }

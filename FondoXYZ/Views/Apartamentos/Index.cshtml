@@ -1,0 +1,31 @@
+@model IEnumerable<FondoXYZ.Models.Apartamento>
+
+@{
+    ViewData["Title"] = "Apartamentos";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Capacidad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var apartamento in Model)
+        {
+            <tr>
+                <td>@apartamento.Id</td>
+                <td>@apartamento.Nombre</td>
+                <td>
+                    <a href="#">Ver</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,10 +1,9 @@
 using FondoXYZ.Models;
-using FondoXYZ.Repositories;
 
 namespace FondoXYZ.Interfaces
 {
-    public interface IUsuarioRepository : IRepository<Usuario>
+    public interface IUsuarioRepository : IGenericRepository<Usuario>
     {
-        
+        Task<Usuario> GetByEmailAsync(string email);
     }
 }

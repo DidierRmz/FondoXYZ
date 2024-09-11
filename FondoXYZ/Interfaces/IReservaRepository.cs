@@ -1,9 +1,10 @@
 using FondoXYZ.Models;
 
-namespace FondoXYZ.Repositories
+namespace FondoXYZ.Interfaces
 {
-    public interface IReservaRepository : IRepository<Reserva>
+    public interface IReservaRepository : IGenericRepository<Reserva>
     {
-        
+        Task<IEnumerable<Apartamento>> ConsultarDisponibilidadAsync(DateTime fechaInicio, DateTime fechaFin);
+        Task CrearReservaAsync(Reserva reserva);
     }
 }

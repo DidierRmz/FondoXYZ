@@ -10,7 +10,7 @@ namespace FondoXYZ.Models
         public string Nombre { get; set; }
         public int CapacidadTotal { get; set; }
 
-
+        
         public ICollection<Apartamento> Apartamentos { get; set; }
     }
 }

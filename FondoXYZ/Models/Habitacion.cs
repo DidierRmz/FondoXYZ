@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace FondoXYZ.Models
 {
@@ -16,6 +17,7 @@ namespace FondoXYZ.Models
         [ForeignKey("Apartamento")]
         public int? ApartamentoId { get; set; }
 
+        [JsonIgnore]
         public Apartamento Apartamento { get; set; }
     }
 }

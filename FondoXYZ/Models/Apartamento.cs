@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace FondoXYZ.Models
 {
@@ -11,9 +12,10 @@ namespace FondoXYZ.Models
         public string Nombre { get; set; }
         public int CapacidadMaxima { get; set; }
 
-        [ForeignKey("SedeRecreativa")]
+        [ForeignKey("SedesRecreativas")]
         public int SedeId { get; set; }
 
+        [JsonIgnore]
         public SedeRecreativa SedeRecreativa { get; set; }
 
         public ICollection<Habitacion> Habitaciones { get; set; }

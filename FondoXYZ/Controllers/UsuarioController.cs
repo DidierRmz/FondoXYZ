@@ -1,32 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using FondoXYZ.Repositories;
+using FondoXYZ.Models;
+using FondoXYZ.Interfaces;
 
 namespace FondoXYZ.Controllers
 {
-    [Route("[controller]")]
+    [ApiController]
+    [Route("api/[controller]")]
     public class UsuariosController : Controller
     {
-        private readonly ILogger<UsuariosController> _logger;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public UsuariosController(ILogger<UsuariosController> logger)
+        public UsuariosController(IUsuarioRepository usuarioRepository)
         {
-            _logger = logger;
+            _usuarioRepository = usuarioRepository;
         }
 
-        public IActionResult Index()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUsuario(int id)
         {
-            return View();
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario == null) return NotFound();
+            return Ok(usuario);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet("email/{email}")]
+        public async Task<IActionResult> GetUsuarioByEmail(string email)
         {
-            return View("Error!");
+            var usuario = await _usuarioRepository.GetByEmailAsync(email);
+            if (usuario == null) return NotFound();
+            return Ok(usuario);
         }
     }
 }

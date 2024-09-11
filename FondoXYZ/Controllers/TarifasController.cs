@@ -1,32 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using FondoXYZ.Repositories;
+using FondoXYZ.Models;
+using FondoXYZ.Interfaces;
 
 namespace FondoXYZ.Controllers
 {
-    [Route("[controller]")]
+    [ApiController]
+    [Route("api/[controller]")]
     public class TarifasController : Controller
     {
-        private readonly ILogger<TarifasController> _logger;
+        private readonly ITarifaRepository _tarifaRepository;
 
-        public TarifasController(ILogger<TarifasController> logger)
+        public TarifasController(ITarifaRepository tarifaRepository)
         {
-            _logger = logger;
+            _tarifaRepository = tarifaRepository;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> GetTarifas()
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
+            var tarifas = await _tarifaRepository.GetAllAsync();
+            return Ok(tarifas);
         }
     }
 }

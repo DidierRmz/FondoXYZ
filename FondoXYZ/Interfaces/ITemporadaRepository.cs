@@ -1,10 +1,7 @@
 using FondoXYZ.Models;
 using FondoXYZ.Repositories;
 
-namespace FondoXYZ.Repositories
+namespace FondoXYZ.Interfaces
 {
-    public interface ITemporadaRepository : IRepository<Temporada>
-    {
-
-    }
+    public interface ITemporadaRepository : IGenericRepository<Temporada> { }
 }

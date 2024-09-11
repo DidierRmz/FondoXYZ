@@ -1,14 +1,12 @@
 using FondoXYZ.Data;
+using FondoXYZ.Interfaces;
 using FondoXYZ.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace FondoXYZ.Repositories
+namespace FondoXYZ.Services
 {
-    public class TarifaRepository : Repository<Tarifa>, ITarifaRepository
+    public class TarifaRepository : GenericRepository<Tarifa>, ITarifaRepository
     {
-        public TarifaRepository(ApplicationDbContext context) : base(context)
-        {
-        }
-
-        // Métodos específicos para Tarifa, si es necesario
+        public TarifaRepository(ApplicationDbContext context) : base(context) { }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FondoXYZ.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240909233755_InitialCreate")]
+    [Migration("20240910222248_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
