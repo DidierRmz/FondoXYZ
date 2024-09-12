@@ -23,6 +23,8 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Server=localhost,1433;Database=fondoxyz;User Id=sa;Password=YourPassword123;Trusted_Connection=False;Encrypt=True;TrustServerCertificate=True;    
+
 // Add repository services
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IReservaRepository, ReservaRepository>();
@@ -100,6 +102,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Register}/{id?}");
+    pattern: "{controller=Apartamentos}/{action=Index}/{id?}");
 
 app.Run();

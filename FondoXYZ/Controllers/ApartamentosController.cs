@@ -4,11 +4,10 @@ using FondoXYZ.Models;
 using FondoXYZ.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using FondoXYZ.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoXYZ.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class ApartamentosController : Controller
     {
         private readonly IApartamentoRepository _apartamentoRepository;
@@ -18,11 +17,11 @@ namespace FondoXYZ.Controllers
             _apartamentoRepository = apartamentoRepository;
         }
 
-        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var apartamentos = await _apartamentoRepository.GetAllApartamentosAsync();
-            return View(apartamentos);
+            //var apartamentos = await _apartamentoRepository.GetAllApartamentosAsync();
+            return View();
         }
     }
 }
