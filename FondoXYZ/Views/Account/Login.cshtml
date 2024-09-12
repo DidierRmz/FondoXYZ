@@ -1,19 +1,184 @@
+@* @{
+ViewData["Title"] = "Login";
+}
+
+<form asp-controller="Account" asp-action="Login" method="post">
+<div>
+<label>Email</label>
+<input type="email" name="Email" required />
+</div>
+<div>
+<label>Password</label>
+<input type="password" name="Password" required />
+</div>
+<div>
+<label>Remember Me</label>
+<input type="checkbox" name="RememberMe" />
+</div>
+<button type="submit">Login</button>
+</form> *@
+
 @{
     ViewData["Title"] = "Login";
 }
 
-<form asp-controller="Account" asp-action="Login" method="post">
-    <div>
-        <label>Email</label>
-        <input type="email" name="Email" required />
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .logo {
+        position: relative;
+        text-align: center;
+    }
+
+    .logo img {
+        width: 100%;
+    }
+
+    .logo .logo-text {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .login-box {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        background: #f9f9f9;
+    }
+
+    .login-box h5 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-box .form-group {
+        margin-bottom: 15px;
+    }
+
+    .login-box .btn {
+        width: 20%;
+        margin-bottom: 10px;
+    }
+
+    .login-box .keyboard {
+        text-align: center;
+    }
+
+    .login-box .keyboard .btn {
+        width: 45px;
+        height: 45px;
+        margin: 5px;
+        font-size: 18px;
+    }
+
+    .login-box .keyboard .btn-lg {
+        width: 90px;
+    }
+
+    .register-box {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .register-box img {
+        width: 100%;
+    }
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="logo">
+                    <img alt="Family in a car" height="300" src="~/assets/images/carrofodun.png" width="500" />
+                </div>
+                <div class="register-box">
+                    <img alt="Register here" height="100" src="~/assets/images/ratonregistro.png" width="300" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="login-box">
+                    <h5>
+                        Ingreso Sistema de Reservas
+                    </h5>
+                    <p>
+                        Digite su Clave a través del teclado dinámico que se encuentra en la pantalla.
+                    </p>
+
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                    <div class="form-group">
+                    <label>
+                            Email:
+                        </label>
+                    <input class="form-control"type="email" name="Email" required />
+                    </div>
+                    <div>
+                    <label>Password</label>
+                    <input class="form-control" type="password" name="Password" required />
+                    </div>
+                    <div>
+                    <label>Remember Me</label>
+                    <input type="checkbox" name="RememberMe" />
+                    </div>
+                    <button class="btn btn-danger" type="submit">Login</button>
+                    </form>
+                    <p>
+                        <a href="#">
+                            ¿Olvidó su clave?
+                        </a>
+                    </p>
+                    <div class="keyboard">
+                        <button class="btn btn-danger">
+                            8
+                        </button>
+                        <button class="btn btn-danger">
+                            0
+                        </button>
+                        <button class="btn btn-danger">
+                            7
+                        </button>
+                        <br />
+                        <button class="btn btn-danger">
+                            2
+                        </button>
+                        <button class="btn btn-danger">
+                            4
+                        </button>
+                        <button class="btn btn-danger">
+                            3
+                        </button>
+                        <br />
+                        <button class="btn btn-danger">
+                            5
+                        </button>
+                        <button class="btn btn-danger">
+                            9
+                        </button>
+                        <button class="btn btn-danger">
+                            1
+                        </button>
+                        <br />
+                        <button class="btn btn-danger">
+                            6
+                        </button>
+                            <button class="btn btn-danger btn-lg">
+                                Limpiar
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label>Password</label>
-        <input type="password" name="Password" required />
-    </div>
-    <div>
-        <label>Remember Me</label>
-        <input type="checkbox" name="RememberMe" />
-    </div>
-    <button type="submit">Login</button>
-</form>
+</body>
