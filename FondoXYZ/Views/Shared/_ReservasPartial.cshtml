@@ -1,0 +1,22 @@
+@model IEnumerable<FondoXYZ.Models.Reserva>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+            <th>Apartamento</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reserva in Model)
+        {
+            <tr>
+                <td>@reserva.FechaInicio.ToShortDateString()</td>
+                <td>@reserva.FechaFin.ToShortDateString()</td>
+                <td>@reserva.Apartamento.Nombre</td>
+            </tr>
+        }
+    </tbody>
+</table>

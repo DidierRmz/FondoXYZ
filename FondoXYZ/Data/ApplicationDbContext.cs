@@ -24,6 +24,18 @@ namespace FondoXYZ.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configuración automática para usar 'longtext' en lugar de 'nvarchar(max)' para cadenas largas
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entity.GetProperties()
+                    .Where(p => p.ClrType == typeof(string) && p.GetMaxLength() == null);
+
+                foreach (var property in properties)
+                {
+                    property.SetColumnType("longtext");
+                }
+            }
+
             // Configuración para SedeRecreativa
             modelBuilder.Entity<SedeRecreativa>()
                 .HasMany(s => s.Apartamentos)
@@ -57,7 +69,6 @@ namespace FondoXYZ.Data
                 .HasOne(r => r.Apartamento)
                 .WithMany(a => a.Reservas)
                 .HasForeignKey(r => r.ApartamentoId);
-
         }
     }
 }

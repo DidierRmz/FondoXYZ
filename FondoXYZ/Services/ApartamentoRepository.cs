@@ -19,8 +19,6 @@ namespace FondoXYZ.Repositories
         {
             return await _context.Apartamentos
                 .Include(a => a.SedeRecreativa)
-                .Include(a => a.Habitaciones)
-                .Include(a => a.Reservas)
                 .ToListAsync();
         }
     }

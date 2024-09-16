@@ -1,288 +1,244 @@
+@using Newtonsoft.Json
 @model IEnumerable<FondoXYZ.Models.Apartamento>
 
 @{
     ViewData["Title"] = "Apartamentos";
 }
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .botonselect {
+        background-color: #bf2f38;
+        color: #fff;
+    }
+</style>
+
 <div class="container">
-    <div class="row">
-        <div class="col-md-12 my-3">
-            <h3 class="text-left">Sedes Recreativas y Apartamentos</h3>
-        </div>
-    </div>
-
-    <!-- Pestañas de navegación -->
-    <ul class="nav nav-tabs" id="apartamentosTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="list-tab" data-bs-toggle="tab" href="#list" role="tab" aria-controls="list"
-                aria-selected="true">Sedes Recreativas y Apartamentos</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="map-tab" data-bs-toggle="tab" href="#map" role="tab" aria-controls="map"
-                aria-selected="false">Seleccione sus Fechas</a>
-        </li>
-    </ul>
-
-    <!-- Contenido de las pestañas -->
-    <div class="tab-content" id="apartamentosTabContent">
-        <!-- Primera pestaña: Listado -->
-        <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
-            <div class="row mt-3">
+    @if (Model == null || !Model.Any())
+    {
+        <p>No se encontraron apartamentos.</p>
+    }
+    else
+    {
+        <form asp-controller="Account" asp-action="Logout" method="post" class="mt-3">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn botonselect btn-danger">Cerrar sesión</button>
+        </form>
+        <div class="row mt-3">
+            <div class="col-md-12 my-3">
+                <h3 class="text-left">Sedes Recreativas y Apartamentos</h3>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table table-striped table-bordered">
+        <ul class="nav nav-tabs" id="apartamentosTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="list-tab" data-bs-toggle="tab" href="#list" role="tab" aria-controls="list"
+                    aria-selected="true">Sedes Recreativas y Apartamentos</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link disabled" id="map-tab" data-bs-toggle="tab" href="#map" role="tab" aria-controls="map"
+                    aria-selected="false">Seleccione sus Fechas</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="apartamentosTabContent">
+            <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+                <div class="row mt-3">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Tipo</th>
+                                    <th>Ubicación</th>
+                                    <th>Sede</th>
+                                    <th>Capacidad Maxima</th>
+                                    <th>Seleccionar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var apartamento in Model)
+                                {
+                                    <tr>
+                                        <td class="w-25"><img src="~/assets/images/sede.jpg" alt="@apartamento.Nombre"
+                                                class="img-thumbnail"></td>
+                                        <td>@apartamento.Nombre</td>
+                                        <td>@apartamento.Descripcion.Substring(0, 150)...</td>
+                                        <td>@apartamento.Tipo</td>
+                                        <td>@apartamento.Ubicacion</td>
+                                        <td>@apartamento.SedeRecreativa?.Nombre</td>
+                                        <td>@apartamento.CapacidadMaxima</td>
+                                        <td>
+                                            <button class="btn btn-danger botonselect seleccionar-apartamento"
+                                                data-id="@apartamento.Id">Seleccionar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
+                <div class="row">
+                    <!-- Parte izquierda: Opciones para consultar disponibilidad y calcular tarifa -->
+                    <div class="col-md-4">
+                        <h3>Consultar Disponibilidad</h3>
+                        <form id="disponibilidad-form">
+                            @Html.AntiForgeryToken() <!-- Agregar token antiforgery -->
+                            <div class="form-group">
+                                <label for="fecha-inicio">Fecha de inicio:</label>
+                                <input type="date" id="fecha-inicio" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha-fin">Fecha de fin:</label>
+                                <input type="date" id="fecha-fin" class="form-control" required />
+                            </div>
+                            <button type="submit" class="btn botonselect btn-danger">Consultar Disponibilidad</button>
+                        </form>
+
+                        <h3 class="mt-4">Calcular Tarifa</h3>
+                        <form id="tarifa-form">
+                            @Html.AntiForgeryToken() <!-- Agregar token antiforgery -->
+                            <div class="form-group">
+                                <label for="numero-personas">Número de personas:</label>
+                                <input type="number" id="numero-personas" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="temporada">Temporada:</label>
+                                <select id="temporada" class="form-control">
+                                    <option value="Alta">Alta</option>
+                                    <option value="Baja">Baja</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn botonselect btn-danger">Calcular Tarifa</button>
+                        </form>
+                    </div>
+
+                    <div class="col-md-4">
+                        <img src="~/assets/images/sede.jpg" class="img-thumbnail">
+                    </div>
+
+                    <!-- Parte derecha: Detalles del apartamento seleccionado -->
+                    <div class="col-md-4">
+                        <h2><strong></strong> <span id="apartamento-nombre"></span></h2>
+                        <p><strong>Descripción:</strong> <span id="apartamento-descripcion"></span></p>
+                        <p><strong>Tipo:</strong> <span id="apartamento-tipo"></span></p>
+                        <p><strong>Ubicación:</strong> <span id="apartamento-ubicacion"></span></p>
+                        <p><strong>Capacidad Máxima:</strong> <span id="apartamento-capacidad"></span></p>
+                    </div>
+                </div>
+
+                <!-- Parte inferior: Tabla con reservas del usuario logueado -->
+                <div class="mt-4">
+                    <h3>Mis Reservas</h3>
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Tipo</th>
-                                <th>Ubicación</th>
-                                <th>Seleccionar</th>
+                                <th>Fecha de inicio</th>
+                                <th>Fecha de fin</th>
+                                <th>Apartamento</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><img src="~/assets/images/sede.jpg"
-                                        alt="Sede Recreativa Villeta" class="img-thumbnail"></td>
-                                <td >Sede Recreativa Villeta</td>
-                                <td>Esta Sede recreativa se encuentra ubicada en el barrio San Jorge a poca distancia de
-                                    la plaza central de Villeta en la Provincia del Gualivá, Cundinamarca</td>
-                                <td>Sede Recreativa</td>
-                                <td>Villeta</td>
-                                <td><button class="btn btn-danger">Seleccionar</button></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/assets/images/sede.jpg"
-                                        alt="Sede Recreativa el Placer" class="img-thumbnail"></td>
-                                <td>Sede Recreativa el Placer</td>
-                                <td>Esta Sede recreativa se encuentra ubicada en la vereda El Placer del municipio de
-                                    Fusagasugá, a unos 10 minutos del casco urbano</td>
-                                <td>Sede Recreativa</td>
-                                <td>Fusagasugá</td>
-                                <td><button class="btn btn-danger">Seleccionar</button></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/assets/images/sede.jpg"
-                                        alt="Edificio Suramericana" class="img-thumbnail"></td>
-                                <td>Edificio Suramericana</td>
-                                <td>Ubicado en la Calle 49 B N° 64B-15 en el edificio Suramericana N° 6 Apartamento
-                                    1204. Cerca del campus de la Universidad Nacional de Colombia</td>
-                                <td>Apartamento</td>
-                                <td>Antioquia</td>
-                                <td><button class="btn btn-danger">Seleccionar</button></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/assets/images/sede.jpg"
-                                        alt="Edificio Reina 1" class="img-thumbnail"></td>
-                                <td>Edificio Reina 1</td>
-                                <td>Ubicados en el edificio REINA 1 de la Carrera 3 número 7-85 centro urbano y
-                                    turístico El Rodadero y a tres cuadras de la playa.</td>
-                                <td>Apartamento</td>
-                                <td>Santa Marta</td>
-                                <td><button class="btn btn-danger">Seleccionar</button></td>
-                            </tr>
+                        <tbody id="reservas-usuario">
+                            <!-- Aquí se insertarán las reservas del usuario logueado -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-        <!-- Segunda pestaña -->
-        <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
-            <div class="container mt-5">
-                <h1 class="text-center mb-4">Sede Recreativa Villeta</h1>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                Mis Fechas
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="fecha_llegada">Fecha de Llegada:</label>
-                                    <input type="date" class="form-control" id="fecha_llegada">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fecha_salida">Fecha de Salida:</label>
-                                    <input type="date" class="form-control" id="fecha_salida">
-                                </div>
-                                <div class="form-group">
-                                    <label for="noches">Noches:</label>
-                                    <input type="number" class="form-control" id="noches">
-                                </div>
-                                <div class="form-group">
-                                    <label for="personas">Personas:</label>
-                                    <input type="number" class="form-control" id="personas">
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="lavanderia">
-                                    <label class="form-check-label" for="lavanderia">Servicio de Lavandería</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mt-3">
-                            <div class="card-header">
-                                Total Reserva
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="habitaciones">Habitaciones:</label>
-                                    <input type="number" class="form-control" id="habitaciones">
-                                </div>
-                                <div class="form-group">
-                                    <label for="dias_ordinarios">Días Ordinarios:</label>
-                                    <input type="number" class="form-control" id="dias_ordinarios">
-                                </div>
-                                <div class="form-group">
-                                    <label for="dias_especiales">Días Expeciales:</label>
-                                    <input type="number" class="form-control" id="dias_especiales">
-                                </div>
-                                <div class="form-group">
-                                    <label for="lavanderia">Lavandería:</label>
-                                    <input type="number" class="form-control" id="lavanderia">
-                                </div>
-                                <div class="form-group">
-                                    <label for="valor_total">Valor Total:</label>
-                                    <input type="text" class="form-control" id="valor_total" value="$000.000" readonly>
-                                </div>
-                                <button class="btn btn-danger btn-block">Reservar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <img src="~/assets/images/sede.jpg" class="card-img-top"
-                                    alt="Sede Recreativa Villeta">
-                                <p class="card-text mt-3">Esta Sede recreativa se encuentra ubicada en el barrio San Jorge a
-                                    poca distancia de la plaza central de Villeta en la Provincia del Gualivá,
-                                    Cundinamarca, distante de Bogotá 90 kilómetros, aproximadamente hora y media por la
-                                    autopista Bogotá - Medellín.</p>
-                                <p class="card-text">La sede recreativa tiene un área aproximada de 1 fanegada, con
-                                    amplias zonas verdes. Servicios de la sede</p>
-                                <ul class="list-group">
-                                    <li class="list-group-item">Sala de estar y Televisión, sala de conferencias con
-                                        capacidad para 20 personas, zona de juegos: billar, tenis de mesa, futbolín y
-                                        juegos de mesa.</li>
-                                    <li class="list-group-item">Área para comedores, 4 cocinetas equipadas, baños de
-                                        emergencia, vestieres y lockers para visita día, tienda, sauna, jacuzzi,
-                                        piscina, cancha de microfutbol y amplias zonas verdes. Alojamientos</li>
-                                    <li class="list-group-item">Ocho habitaciones cada una con una alcoba que tiene una
-                                        cama doble y un camarote, baño, nevera, televisor y terraza cubierta.</li>
-                                </ul>
-                                <p class="card-text">Capacidad total: hasta 32 personas</p>
-                                <a href="#" class="btn btn-danger btn-block">Descargar ruta de llegada</a>
-                            </div>
-                        </div>
-                        <div class="card mt-3">
-                            <div class="card-header">
-                                Habitaciones/Alojamientos
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Detalles</th>
-                                            <th>Habitación / Alojamiento</th>
-                                            <th>Capacidad</th>
-                                            <th>Tarifa día Ordinario</th>
-                                            <th>Tarifa día Expecial</th>
-                                            <th>Disponibilidad Fecha Seleccionada</th>
-                                            <th>Ver Calendario Disponibilidad</th>
-                                            <th>Reservar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>1</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-check"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>2</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-times"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-check"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>4</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-times"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>5</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-check"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>6</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-check"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>7</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-check"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fas fa-search"></i></td>
-                                            <td>8</td>
-                                            <td>4</td>
-                                            <td>$100.000</td>
-                                            <td>$120.000</td>
-                                            <td><i class="fas fa-check"></i></td>
-                                            <td><input type="date"></input></td>
-                                            <td><input type="checkbox"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    }
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const botonesSeleccionar = document.querySelectorAll('.seleccionar-apartamento');
+        const tabMap = document.querySelector('#map-tab');
+
+        botonesSeleccionar.forEach(boton => {
+            boton.addEventListener('click', function () {
+                const apartamentoId = this.getAttribute('data-id');
+                const apartamentos = @Html.Raw(JsonConvert.SerializeObject(Model.Select(a => new
+        {
+            a.Id,
+            a.Nombre,
+            Descripcion = a.Descripcion.Length > 150 ? a.Descripcion : a.Descripcion,
+            a.Tipo,
+            a.Ubicacion,
+            a.CapacidadMaxima
+        })));
+
+                const apartamento = apartamentos.find(a => a.Id == apartamentoId);
+
+                if (apartamento) {
+                    document.getElementById('apartamento-nombre').textContent = apartamento.Nombre;
+                    document.getElementById('apartamento-descripcion').textContent = apartamento.Descripcion;
+                    document.getElementById('apartamento-tipo').textContent = apartamento.Tipo;
+                    document.getElementById('apartamento-ubicacion').textContent = apartamento.Ubicacion;
+                    document.getElementById('apartamento-capacidad').textContent = apartamento.CapacidadMaxima;
+
+                    tabMap.classList.remove('disabled');
+                    var tab = new bootstrap.Tab(tabMap);
+                    tab.show();
+                }
+            });
+        });
+
+        document.getElementById('disponibilidad-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fechaInicio = document.getElementById('fecha-inicio').value;
+            const fechaFin = document.getElementById('fecha-fin').value;
+            const apartamentoId = document.querySelector('.seleccionar-apartamento').getAttribute('data-id');
+
+            fetch('/Apartamentos/ConsultarDisponibilidad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ apartamentoId, fechaInicio, fechaFin })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.reservas > 0) {
+                        alert('El apartamento no está disponible.');
+                    } else {
+                        alert('El apartamento está disponible.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('tarifa-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const numeroPersonas = document.getElementById('numero-personas').value;
+            const temporada = document.getElementById('temporada').value;
+            const apartamentoId = document.querySelector('.seleccionar-apartamento').getAttribute('data-id');
+
+            fetch('/Apartamentos/CalcularTarifa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ apartamentoId, temporada, numeroPersonas })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(`La tarifa total es: ${data.tarifaTotal}`);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+
+
+</script>

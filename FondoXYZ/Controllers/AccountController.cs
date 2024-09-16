@@ -38,12 +38,12 @@ namespace FondoXYZ.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home"); // Redirige a la página principal u otra página después de iniciar sesión
+                return RedirectToAction("Apartamentos", "Index");
             }
 
             if (result.IsLockedOut)
             {
-                return View("Lockout"); // Puedes crear una vista para cuando la cuenta esté bloqueada
+                return View("Lockout");
             }
 
             ModelState.AddModelError(string.Empty, "Inicio de sesión inválido.");
@@ -51,7 +51,7 @@ namespace FondoXYZ.Controllers
         }
 
         // GET: /Account/Register
-        [HttpGet("Register")]
+
         public IActionResult Register()
         {
             return View();
@@ -73,7 +73,7 @@ namespace FondoXYZ.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home"); // Redirige a la página principal u otra página después de registrarse
+                return RedirectToAction("Index", "Home");
             }
 
             foreach (var error in result.Errors)
@@ -90,7 +90,7 @@ namespace FondoXYZ.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); // Redirige a la página principal después de cerrar sesión
+            return RedirectToAction("Account", "Login"); // Redirige a la página principal después de cerrar sesión
         }
     }
 }

@@ -21,9 +21,9 @@ builder.Services.AddControllersWithViews()
 
 // Configure the database context.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-//Server=localhost,1433;Database=fondoxyz;User Id=sa;Password=YourPassword123;Trusted_Connection=False;Encrypt=True;TrustServerCertificate=True;    
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.20-mysql")
+    ));
 
 // Add repository services
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -56,14 +56,13 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Add Swagger services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FondoXYZ API", Version = "v1" });
-});
+// Comment out or remove the Swagger services
+// builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddSwaggerGen(c =>
+// {
+//     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FondoXYZ API", Version = "v1" });
+// });
 
-// Configure Authentication and Authorization
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Set the path for the login page
@@ -76,21 +75,21 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FondoXYZ API v1");
-        c.RoutePrefix = string.Empty; // Set Swagger UI at app's root
-    });
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+// Comment out or remove the Swagger middleware
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI(c =>
+//     {
+//         c.SwaggerEndpoint("/swagger/v1/swagger.json", "FondoXYZ API v1");
+//         c.RoutePrefix = string.Empty; // Set Swagger UI at app's root
+//     });
+// }
+// else
+// {
+//     app.UseExceptionHandler("/Home/Error");
+//     app.UseHsts();
+// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -102,6 +101,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Apartamentos}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Register}/{id?}");
 
 app.Run();

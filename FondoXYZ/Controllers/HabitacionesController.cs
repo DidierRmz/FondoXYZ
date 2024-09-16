@@ -5,8 +5,7 @@ using FondoXYZ.Interfaces;
 
 namespace FondoXYZ.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+
     public class HabitacionesController : Controller
     {
         private readonly IHabitacionRepository _habitacionRepository;
